@@ -1,22 +1,38 @@
 import { useState } from "react";
 import { Form,Button,Label} from "./ContactForm.styled";
+import { useDispatch, useSelector } from "react-redux";
+import { nanoid } from 'nanoid';
+import { addContact, filterContact, getContacts } from "redux/slices/contact-slice";
 
-export const ContactForm = ({formHandler}) => {
+export const ContactForm = () => {
 
-  const [name, setName] = useState('');
-  const [number, setNumber]= useState('');
-
+  const [{name,number},setState] = useState({name:"",number:""})
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
  
 
-  const submitHandler = (e) => {
-    e.preventDefault();
-    formHandler({name,number});
-    e.currentTarget.reset();
+  const onChangeHandler = (e) => {
+    const {name,value} = e.target;
+    setState(prev=>({...prev,[name]:value}))
   }
 
+  const formHandler = (e) => {
+    e.preventDefault();
+    const contact = {
+      id: nanoid(),
+      name,
+      number,
+    };
+    contacts.some(i => i.name === name)
+      ? alert(`${name} is already in contacts`)
+      : dispatch(addContact(contact));
+      dispatch(filterContact(""));
+
+      setState({name:"",number:""})
+  };
 
   return (
-    <Form onSubmit={e=>submitHandler(e)}>
+    <Form onSubmit={formHandler}>
     <Label htmlFor="">Name </Label>
       <input
         type="text"
@@ -24,7 +40,7 @@ export const ContactForm = ({formHandler}) => {
         pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
         title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
         required
-        onChange={e=>setName(e.target.value)}
+        onChange={onChangeHandler}
       />
     <Label htmlFor="">Number</Label>
       <input
@@ -33,7 +49,7 @@ export const ContactForm = ({formHandler}) => {
         pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
         title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
         required
-        onChange={e=>setNumber(e.target.value)}
+        onChange={onChangeHandler}
         />
       <Button type="submit">Save</Button>
     </Form>

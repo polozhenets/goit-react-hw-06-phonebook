@@ -1,5 +1,9 @@
+import { useDispatch } from "react-redux"
+import { filterContact } from "redux/slices/contact-slice"
 
-export const Filter = ({handleFilterContact}) =>{
+export const Filter = () =>{
+  const dispatch = useDispatch()
+
     return(
         <input
         type="text"
@@ -7,7 +11,7 @@ export const Filter = ({handleFilterContact}) =>{
         pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
         title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
         required
-        onChange={handleFilterContact}
+        onChange={e=> dispatch(filterContact(e.target.value.toLocaleLowerCase()))}
       />
     )
 }
