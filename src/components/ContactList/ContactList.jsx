@@ -2,11 +2,8 @@ import { Label } from 'components/ContactForm/ContactForm.styled';
 import { ContactItem } from 'components/ContactItem/ContactItem';
 import { Filter } from 'components/Filter/Filter';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  deleteContact,
-  getContacts,
-  getFilter,
-} from 'redux/slices/contact-slice';
+import {deleteContact} from 'redux/slices/contact-slice';
+import { getContacts,getFilter } from 'redux/selectors';
 
 export const ContactList = () => {
   const dispatch = useDispatch();
@@ -14,14 +11,12 @@ export const ContactList = () => {
   const filterC = useSelector(getFilter);
 
   const filtred = () => {
-    if (filterC === '') {
-      return false;
-    }
+   
     console.log(contacts);
-    return contacts.filter(x => x.name.toLowerCase().includes(filterC));
+    return contacts.filter(contact => contact.name.toLowerCase().includes(filterC));
   };
 
-  const list = filtred() ? filtred() : contacts;
+  const list = filtred();
 
   return (
     <>
