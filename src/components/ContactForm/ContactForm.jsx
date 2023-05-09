@@ -28,7 +28,7 @@ export const ContactForm = () => {
       ? alert(`${name} is already in contacts`)
       : dispatch(addContact(contact));
      
-      setState({name:"",number:""})
+      e.target.reset();
   };
 
   return (
